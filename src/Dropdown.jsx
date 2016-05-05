@@ -85,12 +85,15 @@ export default class Dropdown extends Component {
   static propTypes = {
     value: PropTypes.string,
     options: PropTypes.arrayOf(shapes.ITEM_OR_STRING),
+    allowFreeText: PropTypes.bool,
     onRenderOption: PropTypes.func,
     onRenderList: PropTypes.func,
     optionFilters: PropTypes.arrayOf(PropTypes.func)
   }
 
   static defaultProps = {
+    allowFreeText: false,
+    
     onRenderOption: (className, style, opt, highlighted) =>
       opt !== null ?
         <div {...{ className, style }}>
@@ -147,7 +150,7 @@ export default class Dropdown extends Component {
       const selectedIndex = findOptionIndex(options, shownOptions[highlightedIndex]);
 
       this.setState({ selectedIndex });
-    } else if (this.state.isActive && !nextState.isActive) {
+    } else if (!this.props.allowFreeText && this.state.isActive && !nextState.isActive) {
       this.setState({ value: getOptionText(nextProps.options[nextState.selectedIndex]) });
     }
   }

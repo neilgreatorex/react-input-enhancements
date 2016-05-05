@@ -79,6 +79,7 @@ http://alexkuz.github.io/react-input-enhancements/
 * **`value`** *string* - Input value (for a controlled component)
 * **`defaultValue`** *string* - Initial value (for a uncontrolled component)
 * **`options`** *array* - Array of shown options
+* **`allowFreeText`** *bool* - Allow user to enter value that is not in options list
 * **`onRenderOption`** *function(className, style, option)* - Renders option in list
 * **`onRenderCaret`** *function(className, style, isActive, children)* - Renders a caret
 * **`onRenderList`** *function(className, style, isActive, listShown, children, header)* - Renders list of options
