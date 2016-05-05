@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import * as shapes from './shapes';
 import classNames from 'classnames';
@@ -150,6 +151,12 @@ export default class Dropdown extends Component {
       const selectedIndex = findOptionIndex(options, shownOptions[highlightedIndex]);
 
       this.setState({ selectedIndex });
+
+      const state = getStateFromProps(nextProps);
+
+      if (state.value !== this.state.value && !nextState.isActive) {
+        this.setState(state);
+      }
     } else if (!this.props.allowFreeText && this.state.isActive && !nextState.isActive) {
       this.setState({ value: getOptionText(nextProps.options[nextState.selectedIndex]) });
     }
@@ -225,8 +232,14 @@ export default class Dropdown extends Component {
     );
   }
 
-  handleOptionClick(idx) {
+  handleOptionClick(idx, e) {
     const option = this.state.shownOptions[idx];
+
+    if (option.disabled) {
+      e.preventDefault();
+      return;
+    }
+
     this.setState({
       listShown: false
     }, () => {
@@ -288,6 +301,7 @@ export default class Dropdown extends Component {
 
     setTimeout(() => {
       this.selectOption(findOptionIndex(this.props.options, option), true);
+      this.getInput().blur();
     });
   }
 
@@ -309,6 +323,17 @@ export default class Dropdown extends Component {
         getOptionText(option)
       );
     }
+  }
+
+  getInput() {
+    if (this.props.getInputElement) {
+      return this.props.getInputElement();
+    }
+
+    const el = ReactDOM.findDOMNode(this);
+    return el.tagName === 'INPUT' ?
+      el:
+      el.getElementsByTagName('INPUT')[0];
   }
 
   handleIsActiveChange = isActive => {
